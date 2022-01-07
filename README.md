@@ -96,6 +96,7 @@ Use `ip="$(minikube ip)"` to get the IP address of the cluster.
     }
   }
   ```
+- Prometheus UI: `http://$ip:31190/graph`
 
 # Troubleshooting
 
