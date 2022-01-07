@@ -1,0 +1,6 @@
+---
+apiVersion: v2
+name: suihei
+version: 0.0.1
+
+dependencies: []

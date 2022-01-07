@@ -1,0 +1,65 @@
+# See /licensing.md for licence details.
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: adapter-config
+  namespace: suihei
+data:
+  config.yaml: |
+    # See https://github.com/kubernetes-sigs/prometheus-adapter/blob/master/docs/config.md
+    ---
+    rules:
+
+      - seriesQuery: '{namespace!="",__name__!~"^container_.*"}'
+        seriesFilters:
+          - isNot: .*_total$
+        resources:
+          template: <<.Resource>>
+        name:
+          matches: ""
+          as: ""
+        metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>}) by (<<.GroupBy>>)
+
+      - seriesQuery: 'yourappnamehere_redis_queue_length{queue!=""}'
+        resources:
+          template: <<.Resource>>
+          overrides:
+            # instance:
+            #   resource: node
+            namespace:
+              resource: namespace
+            # pod:
+            #   resource: pod
+        name:
+          matches: "yourappnamehere_redis_queue_length"
+          as: "redisqueue_length"
+        # metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>}) by (<<.GroupBy>>)
+        metricsQuery: <<.Series>>{<<.LabelMatchers>>}
+
+    resourceRules:
+      cpu:
+        containerQuery: sum(rate(container_cpu_usage_seconds_total{<<.LabelMatchers>>}[1m])) by (<<.GroupBy>>)
+        nodeQuery: sum(rate(container_cpu_usage_seconds_total{<<.LabelMatchers>>, id='/'}[1m])) by (<<.GroupBy>>)
+        resources:
+          overrides:
+            instance:
+              resource: node
+            namespace:
+              resource: namespace
+            pod_name:
+              resource: pod
+        containerLabel: container_name
+      memory:
+        containerQuery: sum(container_memory_working_set_bytes{<<.LabelMatchers>>}) by (<<.GroupBy>>)
+        nodeQuery: sum(container_memory_working_set_bytes{<<.LabelMatchers>>,id='/'}) by (<<.GroupBy>>)
+        resources:
+          overrides:
+            instance:
+              resource: node
+            namespace:
+              resource: namespace
+            pod_name:
+              resource: pod
+        containerLabel: container_name
+      window: 1m

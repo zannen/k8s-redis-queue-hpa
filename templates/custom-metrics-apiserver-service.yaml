@@ -1,0 +1,13 @@
+# See /licensing.md for licence details.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: custom-metrics-apiserver
+  namespace: suihei
+spec:
+  ports:
+    - port: 443
+      targetPort: 6443
+  selector:
+    app: custom-metrics-apiserver

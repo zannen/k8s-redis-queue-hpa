@@ -1,0 +1,20 @@
+# See /licensing.md for licence details.
+# This file is auto-generated with `make certs`. DO NOT MODIFY (except for the namespace).
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cm-adapter-serving-certs
+  namespace: YOUR_NAMESPACE_HERE
+data:
+  # base64-encoded:
+  # -----BEGIN CERTIFICATE-----
+  # <<data>>
+  # -----END CERTIFICATE-----
+  serving.crt: __CERTIFICATE_PLACEHOLDER__
+
+  # base64-encoded:
+  # -----BEGIN RSA PRIVATE KEY-----
+  # <<data>>
+  # -----END RSA PRIVATE KEY-----
+  serving.key: __PRIVKEY_PLACEHOLDER__

@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: suihei
+  name: rq-worker-high
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rq-worker-high
+  template:
+    metadata:
+      labels:
+        app: rq-worker-high
+    spec:
+      containers:
+        - name: rq-worker
+          image: oreandawe/redis-queue-monitor-worker:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - rq
+            - worker
+            - high  # queue name
+            - -w
+            - app.MyWorker  # see app/__init__.py for class definition
+            - --url
+            - redis://redis-server:36379
+          env: []
+          envFrom: []
+          volumeMounts: []
