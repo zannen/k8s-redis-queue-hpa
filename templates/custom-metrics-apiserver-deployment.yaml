@@ -3,8 +3,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: custom-metrics-apiserver
   name: custom-metrics-apiserver
   namespace: suihei
 spec:
@@ -22,7 +20,8 @@ spec:
       containers:
         - name: custom-metrics-apiserver
           # https://github.com/kubernetes-sigs/prometheus-adapter
-          image: quay.io/coreos/k8s-prometheus-adapter-amd64:v0.4.1
+          image: k8s.gcr.io/prometheus-adapter/prometheus-adapter:v0.9.1  # use k8s.gcr.io for tags >v0.8.4
+          # OLD: image: quay.io/coreos/k8s-prometheus-adapter-amd64:v0.4.1  # use quay.io for tags <=v0.8.4
           args:
             - /adapter
             - --secure-port=6443

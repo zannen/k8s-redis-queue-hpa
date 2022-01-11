@@ -7,35 +7,42 @@ metadata:
   namespace: suihei
 data:
   config.yaml: |
-    # See https://github.com/kubernetes-sigs/prometheus-adapter/blob/master/docs/config.md
+    # See:
+    # - https://github.com/kubernetes-sigs/prometheus-adapter/blob/v0.9.1/docs/config.md
+    # - https://github.com/kubernetes-sigs/prometheus-adapter/blob/v0.9.1/pkg/config/config.go
     ---
     rules:
+      # Call prometheus API with: /api/v1/series?match[]=<<seriesQuery>>&start=<<timestamp>>
 
-      - seriesQuery: '{namespace!="",__name__!~"^container_.*"}'
-        seriesFilters:
-          - isNot: .*_total$
-        resources:
-          template: <<.Resource>>
-        name:
-          matches: ""
-          as: ""
-        metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>}) by (<<.GroupBy>>)
+      # - seriesQuery: '{namespace!="",__name__!~"^container_.*"}'
+      #   seriesFilters:
+      #     - isNot: .*_total$
+      #   resources:
+      #     template: <<.Resource>>
+      #   name:
+      #     matches: ""
+      #     as: ""
+      #   metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>}) by (<<.GroupBy>>)
 
-      - seriesQuery: 'yourappnamehere_redis_queue_length{queue!=""}'
+      # The metric ID "yourappnamehere_redis_queue_length" comes from:
+      # https://github.com/zannen/redis-queue-monitor-worker/blob/main/app/__init__.py#L106
+      - seriesQuery: 'yourappnamehere_redis_queue_length{queue="high"}'
         resources:
           template: <<.Resource>>
           overrides:
-            # instance:
-            #   resource: node
+            instance:
+              resource: node
+            k8s_name:
+              resource: service
             namespace:
               resource: namespace
-            # pod:
-            #   resource: pod
+            pod:
+              resource: pod
+          # namespaced: true
         name:
-          matches: "yourappnamehere_redis_queue_length"
-          as: "redisqueue_length"
-        # metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>}) by (<<.GroupBy>>)
-        metricsQuery: <<.Series>>{<<.LabelMatchers>>}
+          as: redisqueue_length
+        # metricsQuery: <<.Series>>{<<.LabelMatchers>>}
+        metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>},queue="high") by (<<.GroupBy>>)
 
     resourceRules:
       cpu:

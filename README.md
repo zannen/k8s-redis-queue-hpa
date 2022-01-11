@@ -48,7 +48,7 @@ helm uninstall suihei
   ```shell
   namespace=suihei
   # metric=kubelet_container_log_filesystem_used_bytes  # test metric
-  metric=yourappnamehere_redis_queue_length
+  metric=redisqueue_length
   kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/$namespace/pods/*/$metric" | jq .
   ```
 
@@ -99,6 +99,15 @@ Use `ip="$(minikube ip)"` to get the IP address of the cluster.
 - Prometheus UI: `http://$ip:31190/graph`
 
 # Troubleshooting
+
+Check the metrics API service is working:
+
+```shell
+kubectl get apiservice | grep metrics
+```
+```
+v1beta1.custom.metrics.k8s.io  YOUR_NAMESPACE_HERE/custom-metrics-apiserver  True  1h
+```
 
 If kubernetes won't allow helm to reinstall the app due to lingering objects after an uninstall, use the following:
 
