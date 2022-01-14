@@ -14,35 +14,94 @@ data:
     rules:
       # Call prometheus API with: /api/v1/series?match[]=<<seriesQuery>>&start=<<timestamp>>
 
-      # - seriesQuery: '{namespace!="",__name__!~"^container_.*"}'
-      #   seriesFilters:
-      #     - isNot: .*_total$
-      #   resources:
-      #     template: <<.Resource>>
-      #   name:
-      #     matches: ""
-      #     as: ""
-      #   metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>}) by (<<.GroupBy>>)
+      - seriesQuery: '{__name__=~"^container_.*",container_name!="POD",namespace!="",pod_name!=""}'
+        seriesFilters: []
+        resources:
+          overrides:
+            namespace:
+              resource: namespace
+            pod_name:
+              resource: pod
+        name:
+          matches: ^container_(.*)_seconds_total$
+          as: ""
+        metricsQuery: sum(rate(<<.Series>>{<<.LabelMatchers>>,container_name!="POD"}[1m])) by (<<.GroupBy>>)
+
+      - seriesQuery: '{__name__=~"^container_.*",container_name!="POD",namespace!="",pod_name!=""}'
+        seriesFilters:
+          - isNot: ^container_.*_seconds_total$
+        resources:
+          overrides:
+            namespace:
+              resource: namespace
+            pod_name:
+              resource: pod
+        name:
+          matches: ^container_(.*)_total$
+          as: ""
+        metricsQuery: sum(rate(<<.Series>>{<<.LabelMatchers>>,container_name!="POD"}[1m])) by (<<.GroupBy>>)
+
+      - seriesQuery: '{__name__=~"^container_.*",container_name!="POD",namespace!="",pod_name!=""}'
+        seriesFilters:
+          - isNot: ^container_.*_total$
+        resources:
+          overrides:
+            namespace:
+              resource: namespace
+            pod_name:
+              resource: pod
+        name:
+          matches: ^container_(.*)$
+          as: ""
+        metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>,container_name!="POD"}) by (<<.GroupBy>>)
+
+      - seriesQuery: '{namespace!="",__name__!~"^container_.*"}'
+        seriesFilters:
+          - isNot: .*_total$
+        resources:
+          template: <<.Resource>>
+        name:
+          matches: ""
+          as: ""
+        metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>}) by (<<.GroupBy>>)
+
+      - seriesQuery: '{namespace!="",__name__!~"^container_.*"}'
+        seriesFilters:
+          - isNot: .*_seconds_total
+        resources:
+          template: <<.Resource>>
+        name:
+          matches: ^(.*)_total$
+          as: ""
+        metricsQuery: sum(rate(<<.Series>>{<<.LabelMatchers>>}[1m])) by (<<.GroupBy>>)
+
+      - seriesQuery: '{namespace!="",__name__!~"^container_.*"}'
+        seriesFilters: []
+        resources:
+          template: <<.Resource>>
+        name:
+          matches: ^(.*)_seconds_total$
+          as: ""
+        metricsQuery: sum(rate(<<.Series>>{<<.LabelMatchers>>}[1m])) by (<<.GroupBy>>)
 
       # The metric ID "yourappnamehere_redis_queue_length" comes from:
       # https://github.com/zannen/redis-queue-monitor-worker/blob/main/app/__init__.py#L106
-      - seriesQuery: 'yourappnamehere_redis_queue_length{queue="high"}'
+      - seriesQuery: yourappnamehere_redis_queue_length{pod!=""}
         resources:
           template: <<.Resource>>
           overrides:
-            instance:
-              resource: node
-            k8s_name:
-              resource: service
-            namespace:
-              resource: namespace
-            pod:
-              resource: pod
-          # namespaced: true
+            # instance:
+            #   resource: node
+            # k8s_name:
+            #   resource: service
+            # namespace:
+            #   resource: namespace
+            # pod:
+            #   resource: pod
+          namespaced: true
         name:
           as: redisqueue_length
-        # metricsQuery: <<.Series>>{<<.LabelMatchers>>}
-        metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>},queue="high") by (<<.GroupBy>>)
+        metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>,queue="high"}) by (<<.GroupBy>>)
 
     resourceRules:
       cpu:

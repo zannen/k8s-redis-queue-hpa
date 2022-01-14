@@ -20,6 +20,7 @@ data:
 
       - job_name: 'kubernetes-apiservers'
         kubernetes_sd_configs:
+          # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kubernetes_sd_config
           - role: endpoints
         scheme: https
         tls_config:
@@ -129,4 +130,7 @@ data:
       - job_name: redis-queues
         static_configs:
           - targets:
-            - rq-monitor:32000
+              - rq-monitor:32000
+            labels:
+              namespace: suihei
+              pod: TBD

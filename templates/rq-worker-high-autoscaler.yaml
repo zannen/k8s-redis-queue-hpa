@@ -23,6 +23,12 @@ spec:
   #     selectPolicy: "MaxPolicySelect"
   #     stabilizationWindowSeconds: 60
   metrics:
+    # https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/#autoscaling-on-multiple-metrics-and-custom-metrics:
+    # Pod metrics support AverageValue only.
+    # Object metrics support AverageValue and Value.
+    # With Value, the target is compared directly to the returned metric from the API.
+    # With AverageValue, the value returned from the custom metrics API is divided by the number of Pods before being compared to the target.
+    #
     # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#metricspec-v2beta2-autoscaling
     # - type: Object
     #   object:

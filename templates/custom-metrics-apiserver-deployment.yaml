@@ -30,7 +30,7 @@ spec:
             - --logtostderr=true
             - --prometheus-url=http://prometheus:9090/
             - --metrics-relist-interval=30s
-            - --v=10
+            - --v=10  # verbosity
             - --config=/etc/adapter/config.yaml
           ports:
             - containerPort: 6443
