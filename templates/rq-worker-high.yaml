@@ -15,7 +15,7 @@ spec:
         app: rq-worker-high
     spec:
       containers:
-        - name: rq-worker
+        - name: rq-worker-high
           image: oreandawe/redis-queue-monitor-worker:latest
           imagePullPolicy: IfNotPresent
           command:
@@ -26,6 +26,7 @@ spec:
             - app.MyWorker  # see app/__init__.py for class definition
             - --url
             - redis://redis-server:36379
+          ports: []
           env: []
           envFrom: []
           volumeMounts: []

@@ -54,28 +54,13 @@ helm uninstall suihei
 
 # Ports
 
-- `31190`: Prometheus (see [`prometheus-svc.yaml`](/templates/prometheus-svc.yaml))
-- `32000`: rq-monitor (see [`rq-monitor.yaml`](/templates/rq-monitor.yaml))
+- `32000`: apiserver (see [`apiserver.yaml`](/templates/apiserver.yaml))
 - `36379`: Redis server (see [`redis-server.yaml`](/templates/redis-server.yaml))
 
 # URLs
 
 Use `ip="$(minikube ip)"` to get the IP address of the cluster.
 
-- Get Prometheus metrics:
-
-  ```shell
-  curl -XGET "http://$ip:32000/metrics"
-  ```
-
-  Sample output:
-  ```
-  # TYPE yourappnamehere_redis_queue_length gauge
-  # HELP yourappnamehere_redis_queue_length Redis queue length
-  yourappnamehere_redis_queue_length{queue="high"} 123
-  yourappnamehere_redis_queue_length{queue="low"} 45
-  # EOF
-  ```
 - Enqueue job:
 
   ```shell
@@ -103,7 +88,7 @@ Use `ip="$(minikube ip)"` to get the IP address of the cluster.
 Check the metrics API service is working:
 
 ```shell
-kubectl get apiservice | grep metrics
+kubectl get apiservice | grep custom.metrics
 ```
 ```
 v1beta1.custom.metrics.k8s.io  YOUR_NAMESPACE_HERE/custom-metrics-apiserver  True  1h

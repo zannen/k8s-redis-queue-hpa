@@ -8,6 +8,7 @@ metadata:
 spec:
   ports:
     - port: 443
+      protocol: TCP
       targetPort: 6443
   selector:
     app: custom-metrics-apiserver

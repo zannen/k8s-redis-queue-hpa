@@ -1,9 +1,3 @@
-# v1:
-# - see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#horizontalpodautoscalerspec-v1-autoscaling
-# - has "targetCPUUtilizationPercentage" only
-
-# v2beta2:
-# - see https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#horizontalpodautoscalerspec-v2beta2-autoscaling
 ---
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
@@ -12,54 +6,22 @@ metadata:
   namespace: suihei
 spec:
   # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#horizontalpodautoscalerspec-v2beta2-autoscaling
-  # behavior:
-  #   scaleDown:
-  #     # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#hpascalingpolicy-v2beta2-autoscaling
-  #     policies: []
-  #     selectPolicy: "MaxPolicySelect"
-  #     stabilizationWindowSeconds: 60
-  #   scaleUp:
-  #     policies: []
-  #     selectPolicy: "MaxPolicySelect"
-  #     stabilizationWindowSeconds: 60
   metrics:
-    # https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/#autoscaling-on-multiple-metrics-and-custom-metrics:
-    # Pod metrics support AverageValue only.
-    # Object metrics support AverageValue and Value.
-    # With Value, the target is compared directly to the returned metric from the API.
-    # With AverageValue, the value returned from the custom metrics API is divided by the number of Pods before being compared to the target.
-    #
-    # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#metricspec-v2beta2-autoscaling
-    # - type: Object
-    #   object:
-    #     describedObject:
-    #       apiVersion: apps/v1
-    #       kind: Deployment
-    #       name: rq-worker-high
-    #     # GET /apis/custom.metrics.k8s.io/v1beta1/namespaces/suihei/deployments.apps/rq-worker-high/redisqueue_length?metricLabelSelector=wiggle%3Dwobble
-    #     metric:
-    #       name: redisqueue_length
-    #       # selector:
-    #       #   matchExpressions:
-    #       #     - key: ""
-    #       #       operator: ""
-    #       #       values: []
-    #       #   matchLabels:
-    #       #     # dict of K:V pairs, equivalent to matchExpressions with {key:K, operator:"In", values:[V]}
-    #       #     wiggle: wobble
-    #     target:
-    #       # averageUtilization: 0  # only valid for Resource metric source
-    #       # averageValue: 1  # averaged across all pods
-    #       type: Value
-    #       value: 1
-    - type: Pods
-      pods:
+    - type: Object
+      object:
+        describedObject:
+          apiVersion: apps/v1
+          kind: Deployment
+          name: rq-worker-high
+        # GET /apis/custom.metrics.k8s.io/v1beta1/namespaces/NAMESPACE/deployments.apps/APP/METRIC?metricLabelSelector=KEY%3DVALUE
         metric:
           name: redisqueue_length
-          # selector: ...
+          selector:
+            matchLabels:
+              queue: high
         target:
-          type: AverageValue
-          averageValue: 1
+          type: Value
+          value: 1
   maxReplicas: 10
   minReplicas: 1
   scaleTargetRef:
