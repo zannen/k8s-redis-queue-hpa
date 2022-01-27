@@ -4,7 +4,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: custom-metrics-apiserver
-  namespace: suihei
+  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
@@ -16,7 +16,6 @@ spec:
         app: custom-metrics-apiserver
       name: custom-metrics-apiserver
     spec:
-      serviceAccountName: custom-metrics-apiserver
       containers:
         - name: custom-metrics-apiserver
           image: oreandawe/redis-queue-monitor-worker:latest
@@ -28,8 +27,6 @@ spec:
             - --access-logfile
             - "-"  # Print to stdout
             - --capture-output
-            # - --logger-class
-            # - somepkg.SomeClass
             - --keyfile
             - /var/run/serving-cert/serving.key
             - --certfile
@@ -50,3 +47,13 @@ spec:
         - name: volume-serving-cert
           secret:
             secretName: cm-adapter-serving-certs
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cm-adapter-serving-certs
+  namespace: {{ .Release.Namespace }}
+data:
+  serving.crt: {{ .Values.customMetrics.servingCert }}
+  serving.key: {{ .Values.customMetrics.servingKey }}

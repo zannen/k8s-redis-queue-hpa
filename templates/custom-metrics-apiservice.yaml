@@ -6,11 +6,10 @@ metadata:
   name: v1beta1.custom.metrics.k8s.io
 spec:
   # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#apiservicespec-v1-apiregistration-k8s-io
-  # caBundle: ""  # If unspecified, system trust roots on the apiserver are used.
+  # caBundle: '{{ .Values.customMetrics.caBundle }}'
   service:
     name: custom-metrics-apiserver
-    namespace: suihei
-    # port: 443
+    namespace: {{ .Release.Namespace }}
   group: custom.metrics.k8s.io
   version: v1beta1
   insecureSkipTLSVerify: true

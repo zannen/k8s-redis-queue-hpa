@@ -7,7 +7,7 @@ This repo demonstrates using a Kubernetes custom metric, whose values are fetche
 # Installing with helm
 
 ```shell
-helm install suihei .
+helm install suihei . -n YOUR_NAMESPACE_HERE --create-namespace -f values.yaml -f values-custom.yaml -f values-custom-secret.yaml
 ```
 
 # Uninstalling with helm
@@ -21,7 +21,7 @@ helm uninstall suihei
 - List all metric definitions:
 
   ```shell
-  kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1" | jq .
+  kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/" | jq .
   ```
 
   Sample output:
@@ -32,13 +32,11 @@ helm uninstall suihei
     "groupVersion": "custom.metrics.k8s.io/v1beta1",
     "resources": [
       {
-        "name": "jobs.batch/redisqueue_length",
+        "name": "deployments.apps/redisqueue_length",
         "singularName": "",
         "namespaced": false,
         "kind": "MetricValueList",
-        "verbs": [
-          "get"
-        ]
+        "verbs": ["get"]
       }
     ]
   }
@@ -46,10 +44,9 @@ helm uninstall suihei
 - Get metric values for one metric
 
   ```shell
-  namespace=suihei
-  # metric=kubelet_container_log_filesystem_used_bytes  # test metric
+  namespace=YOUR_NAMESPACE_HERE
   metric=redisqueue_length
-  kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/$namespace/pods/*/$metric" | jq .
+  kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/$namespace/deployments.apps/rq-worker/$metric" | jq .
   ```
 
 # Ports
@@ -98,7 +95,7 @@ If kubernetes won't allow helm to reinstall the app due to lingering objects aft
 
 ```shell
 kubectl proxy &  # get a proxy listening on port 8001.
-namespace=suihei
+namespace=YOUR_NAMESPACE_HERE
 curl -k \
 	-XPUT \
 	-H "Content-Type: application/json" \

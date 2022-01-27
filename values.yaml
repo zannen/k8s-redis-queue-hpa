@@ -1,0 +1,18 @@
+customMetrics:
+  # base64-encoded:
+  # -----BEGIN CERTIFICATE-----
+  # <<data>>
+  # -----END CERTIFICATE-----
+  caBundle: base64-encoded-data
+
+  # base64-encoded:
+  # -----BEGIN CERTIFICATE-----
+  # <<data>>
+  # -----END CERTIFICATE-----
+  servingCert: base64-encoded-data
+
+  # base64-encoded:
+  # -----BEGIN RSA PRIVATE KEY-----
+  # <<data>>
+  # -----END RSA PRIVATE KEY-----
+  servingKey: base64-encoded-data

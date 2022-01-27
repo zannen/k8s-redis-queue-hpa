@@ -3,7 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: redis-data
-  namespace: suihei
+  namespace: {{ .Release.Namespace }}
   labels:
     name: redis-data
 spec:
@@ -17,8 +17,8 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: suihei
   name: redis-server
+  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
@@ -60,8 +60,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: suihei
   name: redis-server
+  namespace: {{ .Release.Namespace }}
 spec:
   type: ClusterIP
   ports:

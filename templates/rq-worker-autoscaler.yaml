@@ -1,30 +1,31 @@
+# See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#horizontalpodautoscalerspec-v2beta2-autoscaling
+
+# API call: GET /apis/custom.metrics.k8s.io/v1beta1/namespaces/NAMESPACE/deployments.apps/APP/METRIC?metricLabelSelector=KEY%3DVALUE
 ---
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: rq-worker-high-hpa
-  namespace: suihei
+  name: rq-worker-hpa
+  namespace: {{ .Release.Namespace }}
 spec:
-  # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#horizontalpodautoscalerspec-v2beta2-autoscaling
   metrics:
     - type: Object
       object:
         describedObject:
           apiVersion: apps/v1
           kind: Deployment
-          name: rq-worker-high
-        # GET /apis/custom.metrics.k8s.io/v1beta1/namespaces/NAMESPACE/deployments.apps/APP/METRIC?metricLabelSelector=KEY%3DVALUE
+          name: rq-worker
         metric:
           name: redisqueue_length
           selector:
             matchLabels:
-              queue: high
+              queues: high-low  # dash-separated list
         target:
           type: Value
           value: 1
-  maxReplicas: 10
+  maxReplicas: 20
   minReplicas: 1
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: rq-worker-high
+    name: rq-worker
