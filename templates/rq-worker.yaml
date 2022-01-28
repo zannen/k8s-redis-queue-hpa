@@ -16,6 +16,7 @@ spec:
     spec:
       containers:
         - name: rq-worker
+          # https://github.com/zannen/redis-queue-monitor-worker/
           image: oreandawe/redis-queue-monitor-worker:latest
           imagePullPolicy: IfNotPresent
           command:
@@ -24,6 +25,8 @@ spec:
             - high  # queue name
             - low  # queue name
             - -w
-            - app.MyWorker  # see app/__init__.py for class definition
+            # For app.MyWorker, see:
+            # https://github.com/zannen/redis-queue-monitor-worker/blob/main/app/__init__.py
+            - app.MyWorker
             - --url
             - redis://redis-server:36379

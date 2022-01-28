@@ -16,6 +16,7 @@ spec:
     spec:
       containers:
         - name: apiserver
+          # https://github.com/zannen/redis-queue-monitor-worker/
           image: oreandawe/redis-queue-monitor-worker:latest
           imagePullPolicy: IfNotPresent
           command:

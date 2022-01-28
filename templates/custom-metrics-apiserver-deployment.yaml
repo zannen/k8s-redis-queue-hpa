@@ -18,6 +18,7 @@ spec:
     spec:
       containers:
         - name: custom-metrics-apiserver
+          # https://github.com/zannen/redis-queue-monitor-worker/
           image: oreandawe/redis-queue-monitor-worker:latest
           imagePullPolicy: IfNotPresent
           command:
