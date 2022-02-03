@@ -29,4 +29,4 @@ spec:
             # https://github.com/zannen/redis-queue-monitor-worker/blob/main/app/__init__.py
             - app.MyWorker
             - --url
-            - redis://redis-server:36379
+            - "redis://redis-server.{{ .Release.Namespace }}.svc.cluster.local:6379"

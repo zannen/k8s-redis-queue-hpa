@@ -1,5 +1,15 @@
 # See /licensing.md for licence details.
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cm-adapter-serving-certs
+  namespace: {{ .Release.Namespace }}
+data:
+  serving.crt: {{ .Values.customMetrics.servingCert }}
+  serving.key: {{ .Values.customMetrics.servingKey }}
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -35,11 +45,6 @@ spec:
             - app:create_metrics_exporter_app()
           ports:
             - containerPort: 6443
-          env:
-            - name: REDIS_HOST
-              value: redis-server
-            - name: REDIS_PORT
-              value: "36379"
           volumeMounts:
             - mountPath: /var/run/serving-cert
               name: volume-serving-cert
@@ -51,10 +56,33 @@ spec:
 
 ---
 apiVersion: v1
-kind: Secret
+kind: Service
 metadata:
-  name: cm-adapter-serving-certs
+  name: custom-metrics-apiserver
   namespace: {{ .Release.Namespace }}
-data:
-  serving.crt: {{ .Values.customMetrics.servingCert }}
-  serving.key: {{ .Values.customMetrics.servingKey }}
+spec:
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: 6443
+  selector:
+    app: custom-metrics-apiserver
+
+{{ if .Values.customMetrics.apiService.deploy }}
+---
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v1beta1.custom.metrics.k8s.io
+spec:
+  # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#apiservicespec-v1-apiregistration-k8s-io
+  caBundle: {{ .Values.customMetrics.apiService.caBundle }}
+  service:
+    name: custom-metrics-apiserver
+    namespace: {{ .Release.Namespace }}
+  group: custom.metrics.k8s.io
+  version: v1beta1
+  insecureSkipTLSVerify: true
+  groupPriorityMinimum: 100
+  versionPriority: 100
+{{ end }} # if .Values.customMetrics.apiService.deploy

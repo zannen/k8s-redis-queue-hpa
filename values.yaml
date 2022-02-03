@@ -1,18 +1,12 @@
 customMetrics:
-  # base64-encoded:
-  # -----BEGIN CERTIFICATE-----
-  # <<data>>
-  # -----END CERTIFICATE-----
-  caBundle: base64-encoded-data
+  apiServer:
+    # The apiserver NodePort must be unique in the cluster.
+    port: 32000
+  apiService:
+    # There can be only one custom metrics APIService in the cluster.
+    # Set deploy=true for the first deployment, otherwise set deploy=false.
+    deploy: true
 
-  # base64-encoded:
-  # -----BEGIN CERTIFICATE-----
-  # <<data>>
-  # -----END CERTIFICATE-----
+  caBundle: null
   servingCert: base64-encoded-data
-
-  # base64-encoded:
-  # -----BEGIN RSA PRIVATE KEY-----
-  # <<data>>
-  # -----END RSA PRIVATE KEY-----
   servingKey: base64-encoded-data

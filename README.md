@@ -45,7 +45,7 @@ helm uninstall suihei
 
   ```shell
   namespace=YOUR_NAMESPACE_HERE
-  kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/$namespace/deployments.apps/rq-worker/redisqueue_length?metricLabelSelector=queues%3Dhigh-low-someinvalidqueuename" | jq .
+  kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/$namespace/deployments.apps/rq-worker/redisqueue_length?metricLabelSelector=queues%3Dhigh-low" | jq .
   ```
 
   Sample output:
@@ -63,9 +63,6 @@ helm uninstall suihei
             "low": {
               "busy_workers": 2,
               "queued_jobs": 0
-            },
-            "someinvalidqueuename": {
-              "error": "queue not found"
             }
           }
         },
@@ -89,8 +86,7 @@ helm uninstall suihei
 
 # Ports
 
-- `32000`: apiserver (see [`apiserver.yaml`](/templates/apiserver.yaml))
-- `36379`: Redis server (see [`redis-server.yaml`](/templates/redis-server.yaml))
+- `32000`: apiserver (see `.customMetrics.apiServer.port` in [`values.yaml`](/values.yaml))
 
 # URLs
 

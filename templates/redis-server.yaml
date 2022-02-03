@@ -65,7 +65,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 36379
+    - port: 6379
       protocol: TCP
       targetPort: 6379
   selector:
