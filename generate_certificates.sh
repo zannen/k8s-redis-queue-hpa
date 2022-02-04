@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-namespace="${1:-default}"
+namespace="${1:-}"
+if [[ -z "$namespace" ]] ; then
+	echo "Syntax: $0 <namespace>"
+	exit 1
+fi
 echo "Using namespace: $namespace"
 
 tmpdir="$(mktemp -d)"
@@ -24,10 +28,11 @@ EOF
 
 cat >"$tmpdir/crt-config.json" <<EOF
 {
-	"CN": "custom-metrics-api-server",
+	"CN": "custom-metrics-apiserver",
 	"hosts": [
-		"custom-metrics-api-server.$namespace",
-		"custom-metrics-api-server.$namespace.svc"
+		"custom-metrics-apiserver",
+		"custom-metrics-apiserver.$namespace",
+		"custom-metrics-apiserver.$namespace.svc"
 	],
 	"key": {"algo": "rsa", "size": 2048}
 }
@@ -57,7 +62,8 @@ echo "--- 8< --- Add the following to values-custom-secret.yaml --- 8< ---"
 cat <<EOF
 ---
 customMetrics:
-  caBundle: '$(cat "$tmpdir/metrics-ca.crt" "$tmpdir/output/apiserver.pem" | base64 -w 0)'
+  apiService:
+    caBundle: '$(cat "$tmpdir/metrics-ca.crt" | base64 -w 0)'
   servingCert: '$(base64 -w 0 "$tmpdir/output/apiserver.pem")'
   servingKey: '$(base64 -w 0 "$tmpdir/output/apiserver-key.pem")'
 EOF

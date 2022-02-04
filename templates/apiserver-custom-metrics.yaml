@@ -76,13 +76,13 @@ metadata:
   name: v1beta1.custom.metrics.k8s.io
 spec:
   # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#apiservicespec-v1-apiregistration-k8s-io
-  caBundle: {{ .Values.customMetrics.apiService.caBundle }}
+  caBundle: '{{ .Values.customMetrics.apiService.caBundle }}'
   service:
     name: custom-metrics-apiserver
     namespace: {{ .Release.Namespace }}
   group: custom.metrics.k8s.io
   version: v1beta1
-  insecureSkipTLSVerify: true
+  insecureSkipTLSVerify: false
   groupPriorityMinimum: 100
   versionPriority: 100
 {{ end }} # if .Values.customMetrics.apiService.deploy
