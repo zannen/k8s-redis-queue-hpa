@@ -63,7 +63,7 @@ cat <<EOF
 ---
 customMetrics:
   apiService:
-    caBundle: '$(cat "$tmpdir/metrics-ca.crt" | base64 -w 0)'
+    caBundle: '$(base64 -w 0 "$tmpdir/metrics-ca.crt")'
   servingCert: '$(base64 -w 0 "$tmpdir/output/apiserver.pem")'
   servingKey: '$(base64 -w 0 "$tmpdir/output/apiserver-key.pem")'
 EOF
