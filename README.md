@@ -55,14 +55,22 @@ helm uninstall suihei
     "items": [
       {
         "_debug": {
+          "all_busy_workers": [
+            "26db71be1f254f99b718a2cfa2219145",
+            "8ba55f15a5a344968ca35bbdb0a44461"
+          ],
           "queue_info": {
             "high": {
-              "busy_workers": 5,
-              "queued_jobs": 3
+              "busy_workers": [
+                "8ba55f15a5a344968ca35bbdb0a44461"
+              ],
+              "queued_job_count": 6
             },
             "low": {
-              "busy_workers": 2,
-              "queued_jobs": 0
+              "busy_workers": [
+                "26db71be1f254f99b718a2cfa2219145"
+              ],
+              "queued_job_count": 1
             }
           }
         },
@@ -73,8 +81,8 @@ helm uninstall suihei
           "namespace": "YOUR_NAMESPACE_HERE"
         },
         "metricName": "count",
-        "timestamp": "2022-01-28T11:40:42Z",
-        "value": "10"
+        "timestamp": "2022-02-04T11:55:41Z",
+        "value": "9"
       }
     ],
     "kind": "MetricValueList",
@@ -106,8 +114,8 @@ Use `ip="$(minikube ip)"` to get the IP address of the cluster.
   ```json
   {
     "job": {
-      "id": "uuiduuid-uuid-4uid-uuid-uuiduuiduuid", 
-      "result": null, 
+      "id": "uuiduuid-uuid-4uid-uuid-uuiduuiduuid",
+      "result": null,
       "status": "queued"
     }
   }
