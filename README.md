@@ -48,7 +48,7 @@ helm uninstall suihei
   kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta1/namespaces/$namespace/deployments.apps/rq-worker/redisqueue_length?metricLabelSelector=queues%3Dhigh-low" | jq .
   ```
 
-  Sample output (see also `MetricValueList` [Golang struct](https://github.com/kubernetes/metrics/blob/342ad4a5669e323882f585879b7c9d4174ab9bcc/pkg/apis/custom_metrics/v1beta2/types.go#L39-L46) and [protobuf message]](https://github.com/kubernetes/metrics/blob/342ad4a5669e323882f585879b7c9d4174ab9bcc/pkg/apis/custom_metrics/v1beta2/generated.proto#L78-L84)):
+  Sample output (see also `MetricValueList` [Golang struct](https://github.com/kubernetes/metrics/blob/342ad4a5669e323882f585879b7c9d4174ab9bcc/pkg/apis/custom_metrics/v1beta2/types.go#L39-L46) and [protobuf message](https://github.com/kubernetes/metrics/blob/342ad4a5669e323882f585879b7c9d4174ab9bcc/pkg/apis/custom_metrics/v1beta2/generated.proto#L78-L84)):
   ```json
   {
     "apiVersion": "custom.metrics.k8s.io/v1beta1",
