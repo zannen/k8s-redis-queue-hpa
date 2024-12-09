@@ -61,6 +61,7 @@ docker run --rm -i \
 echo "--- 8< --- Add the following to values-custom-secret.yaml --- 8< ---"
 cat <<EOF
 ---
+# namespace: $namespace
 customMetrics:
   apiService:
     caBundle: '$(base64 -w 0 "$tmpdir/metrics-ca.crt")'
