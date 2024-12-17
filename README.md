@@ -21,7 +21,7 @@ helm install suihei . -n YOUR_NAMESPACE_HERE --create-namespace -f values.yaml -
 # Uninstalling with helm
 
 ```shell
-helm uninstall suihei
+helm uninstall -n YOUR_NAMESPACE_HERE suihei
 ```
 
 # Kubernetes custom metrics
@@ -131,7 +131,7 @@ Use `ip="$(minikube ip)"` to get the IP address of the cluster.
 
 # Troubleshooting
 
-Check the metrics API service is working:
+## Checking the metrics API service is working
 
 ```shell
 kubectl get apiservice | grep custom.metrics
@@ -139,6 +139,8 @@ kubectl get apiservice | grep custom.metrics
 ```
 v1beta1.custom.metrics.k8s.io  YOUR_NAMESPACE_HERE/custom-metrics-apiserver  True  1h
 ```
+
+## Reinstalling the app
 
 If kubernetes won't allow helm to reinstall the app due to lingering objects after an uninstall, use the following:
 
@@ -151,6 +153,11 @@ curl -k \
   --data-binary '{"apiVersion":"v1","kind":"Namespace","metadata":{"name":"'"$namespace"'"},"spec":{"finalizers":[]}}' \
   "http://127.0.0.1:8001/api/v1/namespaces/$namespace/finalize"
 ```
+
+## Miscellaneous error messages
+
+- `Error from server (ServiceUnavailable): the server is currently unable to handle the request`
+  may indicate that the namespace in the certificates does not match the deployed namespace.
 
 # License
 
