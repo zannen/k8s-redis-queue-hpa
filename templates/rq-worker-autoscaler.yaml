@@ -2,7 +2,7 @@
 
 # API call: GET /apis/custom.metrics.k8s.io/v1beta1/namespaces/NAMESPACE/deployments.apps/APP/METRIC?metricLabelSelector=KEY%3DVALUE
 ---
-apiVersion: autoscaling/v2beta2
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: rq-worker-hpa

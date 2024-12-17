@@ -4,6 +4,14 @@ This repo demonstrates using a Kubernetes custom metric to enable the Kubernetes
 
 **NOTE**: If you want to scale on CPU and/or memory, there's no need for this repo or all this complexity. Use the [Metrics Server](https://github.com/kubernetes-sigs/metrics-server#use-cases) instead.
 
+# Generating secrets
+
+```shell
+./generate_certificates.sh YOUR_NAMESPACE_HERE
+```
+
+Then copy the last part of the output (after `--- 8< ---`) into `values-custom-secret.yaml`.
+
 # Installing with helm
 
 ```shell
@@ -34,7 +42,7 @@ helm uninstall suihei
       {
         "name": "deployments.apps/redisqueue_length",
         "singularName": "",
-        "namespaced": false,
+        "namespaced": true,
         "kind": "MetricValueList",
         "verbs": ["get"]
       }

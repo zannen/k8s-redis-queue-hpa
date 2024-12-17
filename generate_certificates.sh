@@ -39,7 +39,7 @@ cat >"$tmpdir/crt-config.json" <<EOF
 EOF
 
 usergroup="$(id -u):$(id -g)"
-docker run -i \
+docker run --rm -i \
 	-v "$tmpdir:/workdir" \
 	-w /workdir \
 	--user "$usergroup" \
@@ -50,7 +50,7 @@ docker run -i \
 		-config=metrics-ca-config.json \
 		- \
 		<"$tmpdir/crt-config.json" \
-| docker run -i \
+| docker run --rm -i \
 	--entrypoint=cfssljson \
 	-v "$tmpdir:/workdir" \
 	-w /workdir \
